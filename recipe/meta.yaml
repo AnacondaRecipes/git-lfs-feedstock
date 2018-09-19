@@ -1,4 +1,4 @@
-{% set version = "2.4.2" %}
+{% set version = "2.5.2" %}
 {% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
 
 package:
@@ -6,28 +6,31 @@ package:
   version: {{ version }}
 
 source:
-  url: {{ download_url }}/v{{ version }}/git-lfs-linux-amd64-{{ version }}.tar.gz  # [linux]
-  fn: git-lfs-linux-amd64-{{ version }}.tar.gz  # [linux]
-  sha256: 29529b6c7afb5f656860d5fad7c054baaeded95ecbda040592a58dbcdbb38fe0  # [linux]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-amd64-{{ version }}.tar.gz  # [osx]
-  fn: git-lfs-darwin-amd64-{{ version }}.tar.gz  # [osx]
-  sha256: 5efdad9722712c6fc039c1ee824c46b3f3c3f8794b2ef8a9776ff8083a3d5e97  # [osx]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-windows-amd64-{{ version }}.zip  # [win]
-  fn: git-lfs-windows-amd64-{{ version }}.zip  # [win]
-  sha256: 4c95d8e842ef55013c8ac99c4ffcad2a20a41bc41bd8e0943a228a03e07cd976  # [win]
+  url: https://github.com/git-lfs/git-lfs/archive/v{{ version }}.tar.gz
+  sha256: 0ab21f0f9b6c40acd9748a1669f1023ef38f913d8be83bbf7b7c7d983bd3c4d1
 
 build:
   number: 0
+  skip: True  # [ppc64le]
+  # TODO windows support
+  skip: True  # [win]
+  binary_relocation: False
+  detect_binary_files_with_prefix: False
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - go
 
 test:
   commands:
+    - git-lfs --version
     - git-lfs --help
 
 about:
   home: https://git-lfs.github.com/
   license: MIT
+  license_family: MIT
   license_file: '{{ environ["RECIPE_DIR"] }}/LICENSE.md'
   summary: An open source Git extension for versioning large files
 
