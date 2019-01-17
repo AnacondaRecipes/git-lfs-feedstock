@@ -1,4 +1,4 @@
-{% set version = "2.5.2" %}
+{% set version = "2.6.1" %}
 {% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/git-lfs/git-lfs/archive/v{{ version }}.tar.gz
-  sha256: 0ab21f0f9b6c40acd9748a1669f1023ef38f913d8be83bbf7b7c7d983bd3c4d1
+  sha256: e17cd9d4e66d1116be32f7ddc7e660c7f8fabbf510bc01b01ec15a22dd934ead
 
 build:
   number: 0
