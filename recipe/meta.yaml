@@ -1,4 +1,4 @@
-{% set version = "2.13.3" %}
+{% set version = "3.5.1" %}
 {% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
 
 package:
@@ -7,19 +7,22 @@ package:
 
 source:
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-amd64-v{{ version }}.tar.gz  # [linux]
-  sha256: 03197488f7be54cfc7b693f0ed6c75ac155f5aaa835508c64d68ec8f308b04c1  # [linux]
+  sha256: 6f28eb19faa7a968882dca190d92adc82493378b933958d67ceaeb9ebe4d731e  # [linux]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-darwin-amd64-v{{ version }}.zip  # [osx]
-  sha256: 20509abd5291586c53e1c19768e06e7b2cf7d200cdce7b73a8ff2cfd51c49c51  # [osx]
+  sha256: 23f6c768e22a33dcbb57d6cb67d318dc0edc2b16ac04b15faa803a74a31e8c42  # [osx]
+
+  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-arm64-v{{ version }}.zip  # [arm64]
+  sha256: 1570833e5011290dff12a18416580bfed576bc797b7b521122916e09adf4622d  # [arm64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-windows-amd64-v{{ version }}.zip  # [win]
-  sha256: 7997d2a6e4103af331c73db10860426cb03c5188426d27619e823358493e13e4  # [win]
+  sha256: 94435072f6b3a6f9064b277760c8340e432b5ede0db8205d369468b9be52c6b6  # [win]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-arm64-v{{ version }}.tar.gz  # [aarch64]
-  sha256: 42baf1ec23e9fba197b1a62d09aab1d5dab744da6923009d6f9e4dc6d79df978  # [aarch64]
+  sha256: 4f8700aacaa0fd26ae5300fb0996aed14d1fd0ce1a63eb690629c132ff5163a9  # [aarch64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-ppc64le-v{{ version }}.tar.gz  # [ppc64le]
-  sha256: bf6eafb1f9aedbdbfed6bed1b6007400d237a3ab82153908892de6ca7ad902f1  # [ppc64le]
+  sha256: 2c684eec57322d7bc6212f1567d1dd50a6172ed3175f31228fc0a3c0e0c2ebbc  # [ppc64le]
 
 build:
   number: 0
@@ -40,7 +43,6 @@ test:
 about:
   home: https://git-lfs.github.com/
   license: MIT
-  license_family: MIT
   license_file: {{ environ["RECIPE_DIR"] }}/LICENSE.md
   summary: An open source Git extension for versioning large files
   dev_url: https://github.com/git-lfs/git-lfs
