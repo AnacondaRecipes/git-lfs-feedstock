@@ -6,14 +6,14 @@ package:
   version: {{ version }}
 
 source:
-  url: {{ download_url }}/v{{ version }}/git-lfs-linux-amd64-v{{ version }}.tar.gz  # [linux]
-  sha256: 6f28eb19faa7a968882dca190d92adc82493378b933958d67ceaeb9ebe4d731e  # [linux]
+  url: {{ download_url }}/v{{ version }}/git-lfs-linux-amd64-v{{ version }}.tar.gz  # [linux and x86_64]
+  sha256: 6f28eb19faa7a968882dca190d92adc82493378b933958d67ceaeb9ebe4d731e  # [linux and x86_64]
 
-  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-amd64-v{{ version }}.zip  # [osx]
-  sha256: 23f6c768e22a33dcbb57d6cb67d318dc0edc2b16ac04b15faa803a74a31e8c42  # [osx]
+  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-amd64-v{{ version }}.zip  # [osx and x86_64]
+  sha256: 23f6c768e22a33dcbb57d6cb67d318dc0edc2b16ac04b15faa803a74a31e8c42  # [osx and x86_64]
 
-  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-arm64-v{{ version }}.zip  # [arm64]
-  sha256: 1570833e5011290dff12a18416580bfed576bc797b7b521122916e09adf4622d  # [arm64]
+  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-arm64-v{{ version }}.zip  # [osx and arm64]
+  sha256: 1570833e5011290dff12a18416580bfed576bc797b7b521122916e09adf4622d  # [osx and arm64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-windows-amd64-v{{ version }}.zip  # [win]
   sha256: 94435072f6b3a6f9064b277760c8340e432b5ede0db8205d369468b9be52c6b6  # [win]
@@ -24,14 +24,13 @@ source:
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-ppc64le-v{{ version }}.tar.gz  # [ppc64le]
   sha256: 2c684eec57322d7bc6212f1567d1dd50a6172ed3175f31228fc0a3c0e0c2ebbc  # [ppc64le]
 
+  url: {{ download_url }}/v{{ version }}/git-lfs-linux-s390x-v{{ version }}.tar.gz  # [s390x]
+  sha256: a30303298d2a0f3f3a95c70e80661bdc0bc96415489374b3812406bac56bdbad  # [s390x]
+
 build:
   number: 0
   binary_relocation: false
   detect_binary_files_with_prefix: false
-
-requirements:
-  build:
-    - git               # [unix]
 
 test:
   commands:
@@ -41,10 +40,13 @@ test:
     - git-lfs --help
 
 about:
-  home: https://git-lfs.github.com/
+  home: https://git-lfs.com/
   license: MIT
+  license_family: MIT
   license_file: {{ environ["RECIPE_DIR"] }}/LICENSE.md
-  summary: An open source Git extension for versioning large files
+  summary: Git extension for versioning large files
+  description: |
+    Git LFS is a command line extension and specification for managing large files with Git.
   dev_url: https://github.com/git-lfs/git-lfs
   doc_url: https://github.com/git-lfs/git-lfs/tree/main/docs
 
