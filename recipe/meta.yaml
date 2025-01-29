@@ -1,4 +1,4 @@
-{% set version = "3.5.1" %}
+{% set version = "3.6.1" %}
 {% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
 
 package:
@@ -7,25 +7,25 @@ package:
 
 source:
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-amd64-v{{ version }}.tar.gz  # [linux and x86_64]
-  sha256: 6f28eb19faa7a968882dca190d92adc82493378b933958d67ceaeb9ebe4d731e  # [linux and x86_64]
+  sha256: 62138d2e405a12f1a088272e06790b76699b79cb90d0317b77aafaf35de908d7  # [linux and x86_64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-darwin-amd64-v{{ version }}.zip  # [osx and x86_64]
-  sha256: 23f6c768e22a33dcbb57d6cb67d318dc0edc2b16ac04b15faa803a74a31e8c42  # [osx and x86_64]
+  sha256: b53c361e6c85479507ed39ba99b87ec0888ac52f5afd2084fc68af4103081391  # [osx and x86_64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-darwin-arm64-v{{ version }}.zip  # [osx and arm64]
-  sha256: 1570833e5011290dff12a18416580bfed576bc797b7b521122916e09adf4622d  # [osx and arm64]
+  sha256: 83b4ea3b0c72ba19e3bc46e47e92476f4505cc96693333b9fa0a314dddacc4ba  # [osx and arm64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-windows-amd64-v{{ version }}.zip  # [win]
-  sha256: 94435072f6b3a6f9064b277760c8340e432b5ede0db8205d369468b9be52c6b6  # [win]
+  sha256: aaca788e04f91676e58654d5ecf96cf03c76768a63b3a6918281a9678884c20c  # [win]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-arm64-v{{ version }}.tar.gz  # [aarch64]
-  sha256: 4f8700aacaa0fd26ae5300fb0996aed14d1fd0ce1a63eb690629c132ff5163a9  # [aarch64]
+  sha256: 1c2720ff53528fbe769633d448d830aa7b682141e3c4f6a9f26b9cf3b2548d0a  # [aarch64]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-ppc64le-v{{ version }}.tar.gz  # [ppc64le]
-  sha256: 2c684eec57322d7bc6212f1567d1dd50a6172ed3175f31228fc0a3c0e0c2ebbc  # [ppc64le]
+  sha256: 86d42801b6e70522560eb3e33c0512f9733b3dad1ca08471cd135f445029cdfb  # [ppc64le]
 
   url: {{ download_url }}/v{{ version }}/git-lfs-linux-s390x-v{{ version }}.tar.gz  # [s390x]
-  sha256: a30303298d2a0f3f3a95c70e80661bdc0bc96415489374b3812406bac56bdbad  # [s390x]
+  sha256: c9aa0391ac58c5ed695fceec891c953d12fe78ae31ecbd5fd3cb4204cf8273a9  # [s390x]
 
 build:
   number: 0
