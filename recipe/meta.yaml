@@ -20,7 +20,8 @@ build:
   number: 0
   binary_relocation: false
   detect_binary_files_with_prefix: false
-  script:
+  script: build_s390x.sh # [s390x]
+  script: # [not s390x]
     - set -x                                                            # [unix and not s390x]
     - cd {{ pkg_src }}                                                  # [not s390x]
     - go mod tidy                                                       # [not s390x]
@@ -32,7 +33,6 @@ build:
     - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true   # [not s390x]
     # Cleanup for Go builds
     - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)           # [unix and not s390x]
-    - ./build_s390x.sh # [s390x]
 
 requirements:
   build:
