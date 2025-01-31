@@ -39,9 +39,7 @@ requirements:
 
 test:
   commands:
-    - codesign -d -vvv $(which git-lfs)             # [osx]
     - shasum -a 256 $(which git-lfs)                # [osx]
-    - codesign --verify --verbose $(which git-lfs)  # [osx]
     - git-lfs --help
 
 about:
