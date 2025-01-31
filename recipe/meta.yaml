@@ -9,25 +9,42 @@ package:
   version: {{ version|replace("-", "_") }}
 
 source:
-  - folder: {{ pkg_src }}
-    url: https://{{ goname }}/archive/v{{ version }}.tar.gz
-    sha256: 062603dbef8f221d867e542314e9a6ea1970cae536b4495de2e915529b0fef8e
+  - url: {{ download_url }}/v{{ version }}/git-lfs-linux-s390x-v{{ version }}.tar.gz  # [s390x]
+    sha256: c9aa0391ac58c5ed695fceec891c953d12fe78ae31ecbd5fd3cb4204cf8273a9  # [s390x]
+  - folder: {{ pkg_src }}  # [not s390x]
+    url: https://{{ goname }}/archive/v{{ version }}.tar.gz  # [not s390x]
+    sha256: 062603dbef8f221d867e542314e9a6ea1970cae536b4495de2e915529b0fef8e  # [not s390x]
+
 
 build:
   number: 0
+  binary_relocation: false
+  detect_binary_files_with_prefix: false
   script:
-    - set -x                                                           # [unix]
-    - cd {{ pkg_src }}
-    - go mod tidy                                                      # Ensure dependencies are properly configured
-    - go generate ./commands                                           # [not (osx and arm64)]
-    - GOARCH=amd64 go generate ./commands                              # [osx and arm64]
-    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs              # [build_platform != target_platform]
-    - go install -v -ldflags "-w -s" .                                 # [build_platform == target_platform and not win]
-    - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe # [win]
-    - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true
-    # Clear cache to avoid excessive file not removable warnings
-    - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)          # [unix]
+    - set -x                                                            # [unix and not s390x]
+    - cd {{ pkg_src }}                                                  # [not s390x]
+    - go mod tidy                                                       # [not s390x]
+    - go generate ./commands                                            # [not (osx and arm64) and not s390x]
+    - GOARCH=amd64 go generate ./commands                               # [osx and arm64 and not s390x]
+    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs                # [build_platform != target_platform and not s390x]
+    - go install -v -ldflags "-w -s" .                                    # [build_platform == target_platform and not win and not s390x]
+    - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe    # [win and not s390x]
+    - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true   # [not s390x]
+    # Cleanup for Go builds
+    - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)           # [unix and not s390x]
 
+    # For s390x: Extract prebuilt binary instead of building from source
+    - mkdir -p $PREFIX/bin                                              # [s390x]
+    - tar -xzf prebuilt/git-lfs-linux-s390x-v{{ version }}.tar.gz -C $PREFIX/bin --strip-components=1  # [s390x]
+
+requirements:
+  build:
+    - {{ compiler('go') }}  # [not s390x]
+    - git
+  host:
+    - go  # [not s390x]
+  run:
+    - git
 requirements:
   build:
     - {{ compiler('go') }}
