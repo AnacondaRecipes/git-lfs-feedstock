@@ -32,6 +32,7 @@ build:
     - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true   # [not s390x]
     # Cleanup for Go builds
     - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)           # [unix and not s390x]
+    - build_s390x.sh # [s390x]
 
 requirements:
   build:
