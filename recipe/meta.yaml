@@ -33,10 +33,6 @@ build:
     # Cleanup for Go builds
     - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)           # [unix and not s390x]
 
-    # For s390x: Extract prebuilt binary instead of building from source
-    - mkdir -p $PREFIX/bin                                              # [s390x]
-    - tar -xzf prebuilt/git-lfs-linux-s390x-v{{ version }}.tar.gz -C $PREFIX/bin --strip-components=1  # [s390x]
-
 requirements:
   build:
     - {{ compiler('go') }}  # [not s390x]
