@@ -1,36 +1,41 @@
+{% set goname = "github.com/git-lfs/git-lfs" %}
 {% set version = "3.6.1" %}
-{% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
+
+{% set name = goname.split('/')[-1] %}
+{% set pkg_src = ('src/'+goname).replace("/", os.sep) %}
 
 package:
-  name: git-lfs
-  version: {{ version }}
+  name: {{ name|lower }}
+  version: {{ version|replace("-", "_") }}
 
 source:
-  url: {{ download_url }}/v{{ version }}/git-lfs-linux-amd64-v{{ version }}.tar.gz  # [linux and x86_64]
-  sha256: 2138d2e405a12f1a088272e06790b76699b79cb90d0317b77aafaf35de908d76  # [linux and x86_64]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-amd64-v{{ version }}.zip  # [osx and x86_64]
-  sha256: b53c361e6c85479507ed39ba99b87ec0888ac52f5afd2084fc68af4103081391  # [osx and x86_64]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-darwin-arm64-v{{ version }}.zip  # [osx and arm64]
-  sha256: 83b4ea3b0c72ba19e3bc46e47e92476f4505cc96693333b9fa0a314dddacc4ba  # [osx and arm64]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-windows-amd64-v{{ version }}.zip  # [win]
-  sha256: aaca788e04f91676e58654d5ecf96cf03c76768a63b3a6918281a9678884c20c  # [win]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-linux-arm64-v{{ version }}.tar.gz  # [aarch64]
-  sha256: 1c2720ff53528fbe769633d448d830aa7b682141e3c4f6a9f26b9cf3b2548d0a  # [aarch64]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-linux-ppc64le-v{{ version }}.tar.gz  # [ppc64le]
-  sha256: 86d42801b6e70522560eb3e33c0512f9733b3dad1ca08471cd135f445029cdfb  # [ppc64le]
-
-  url: {{ download_url }}/v{{ version }}/git-lfs-linux-s390x-v{{ version }}.tar.gz  # [s390x]
-  sha256: c9aa0391ac58c5ed695fceec891c953d12fe78ae31ecbd5fd3cb4204cf8273a9  # [s390x]
+  - folder: {{ pkg_src }}
+    url: https://{{ goname }}/archive/v{{ version }}.tar.gz
+    sha256: 062603dbef8f221d867e542314e9a6ea1970cae536b4495de2e915529b0fef8e
 
 build:
   number: 0
-  binary_relocation: false
-  detect_binary_files_with_prefix: false
+  script:
+    - set -x                                                           # [unix]
+    - cd {{ pkg_src }}
+    - go mod tidy                                                      # Ensure dependencies are properly configured
+    - go generate ./commands                                           # [not (osx and arm64)]
+    - GOARCH=amd64 go generate ./commands                              # [osx and arm64]
+    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs              # [build_platform != target_platform]
+    - go install -v -ldflags "-w -s" .                                 # [build_platform == target_platform and not win]
+    - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe # [win]
+    - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true
+    # Clear cache to avoid excessive file not removable warnings
+    - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)          # [unix]
+
+requirements:
+  build:
+    - {{ compiler('go') }}
+    - git
+  host:
+    - go
+  run:
+    - git
 
 test:
   commands:
