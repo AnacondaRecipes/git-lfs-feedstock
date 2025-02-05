@@ -1,5 +1,6 @@
 {% set goname = "github.com/git-lfs/git-lfs" %}
 {% set version = "3.6.1" %}
+{% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
 
 {% set name = goname.split('/')[-1] %}
 {% set pkg_src = ('src/'+goname).replace("/", os.sep) %}
