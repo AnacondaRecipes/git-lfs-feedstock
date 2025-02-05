@@ -21,40 +21,32 @@ build:
   number: 0
   binary_relocation: false
   detect_binary_files_with_prefix: false
-  script: build_s390x.sh # [s390x]
-  script: # [not s390x]
-    - set -x                                                            # [unix and not s390x]
-    - cd {{ pkg_src }}                                                  # [not s390x]
-    - go mod tidy                                                       # [not s390x]
-    - go generate ./commands                                            # [not (osx and arm64) and not s390x]
-    - GOARCH=amd64 go generate ./commands                               # [osx and arm64 and not s390x]
-    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs                # [build_platform != target_platform and not s390x]
+  script:
+    - set -x                                                              # [unix]
+
+    # Building for s390x - without go
+    # from https://github.com/git-lfs/git-lfs/blob/main/script/install.sh
+    - mkdir -p "${PREFIX}/bin"                                            # [s390x]
+    - for g in git*; do install $g "${PREFIX}/bin/${g}"; done             # [s390x]
+
+    # Building for other subdirs
+    - cd {{ pkg_src }}                                                    # [not s390x]
+    - go mod tidy                                                         # [not s390x]
+    - go generate ./commands                                              # [not (osx and arm64) and not s390x]
+    - GOARCH=amd64 go generate ./commands                                 # [osx and arm64]
+    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs                 # [build_platform != target_platform and not s390x]
     - go install -v -ldflags "-w -s" .                                    # [build_platform == target_platform and not win and not s390x]
     - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe    # [win and not s390x]
-    - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true   # [not s390x]
+    - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true  # [not s390x]
     # Cleanup for Go builds
-    - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)           # [unix and not s390x]
+    - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)             # [unix and not s390x]
 
 requirements:
   build:
     - {{ compiler('go') }}  # [not s390x]
-    - git
-  host:
-    - go  # [not s390x]
-  run:
-    - git
-requirements:
-  build:
-    - {{ compiler('go') }}   # [not s390x]
-    - git
-  host:
-    - go   # [not s390x]
-  run:
-    - git
 
 test:
   commands:
-    - shasum -a 256 $(which git-lfs)                # [osx]
     - git-lfs --help
 
 about:
