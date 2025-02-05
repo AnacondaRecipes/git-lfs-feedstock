@@ -45,10 +45,10 @@ requirements:
     - git
 requirements:
   build:
-    - {{ compiler('go') }}
+    - {{ compiler('go') }}   # [not s390x]
     - git
   host:
-    - go
+    - go   # [not s390x]
   run:
     - git
 
