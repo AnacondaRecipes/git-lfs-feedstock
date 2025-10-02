@@ -1,5 +1,5 @@
 {% set goname = "github.com/git-lfs/git-lfs" %}
-{% set version = "3.6.1" %}
+{% set version = "3.7.0" %}
 {% set download_url = "https://github.com/git-lfs/git-lfs/releases/download" %}
 
 {% set name = goname.split('/')[-1] %}
@@ -11,10 +11,10 @@ package:
 
 source:
   - url: {{ download_url }}/v{{ version }}/git-lfs-linux-s390x-v{{ version }}.tar.gz  # [s390x]
-    sha256: c9aa0391ac58c5ed695fceec891c953d12fe78ae31ecbd5fd3cb4204cf8273a9  # [s390x]
+    sha256: 5f3c1167df6f50fe88bea1e17fa8291d85fe5a214ad7326511ec929c09a54ad9  # [s390x]
   - folder: {{ pkg_src }}  # [not s390x]
     url: https://{{ goname }}/archive/v{{ version }}.tar.gz  # [not s390x]
-    sha256: 062603dbef8f221d867e542314e9a6ea1970cae536b4495de2e915529b0fef8e  # [not s390x]
+    sha256: ab173702840627feb5f8a408dd5406fa322f3eadaa69938d9226b183d5be25a6  # [not s390x]
 
 
 build:
@@ -35,7 +35,7 @@ build:
     - go generate ./commands                                              # [not (osx and arm64) and not s390x]
     - GOARCH=amd64 go generate ./commands                                 # [osx and arm64]
     - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs                 # [build_platform != target_platform and not s390x]
-    - go install -v -ldflags "-w -s" .                                    # [build_platform == target_platform and not win and not s390x]
+    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs .               # [build_platform == target_platform and not win and not s390x]
     - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe    # [win and not s390x]
     - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true  # [not s390x]
     # Cleanup for Go builds
@@ -43,17 +43,19 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('go') }}  # [not s390x]
+    - go-licenses
 
 test:
   commands:
-    - git-lfs --help
+    - git-lfs --version
 
 about:
-  home: https://git-lfs.com/
+  home: https://git-lfs.com
   license: MIT
   license_family: MIT
-  license_file: {{ environ["RECIPE_DIR"] }}/LICENSE.md
+  license_file: LICENSE.md
   summary: Git extension for versioning large files
   description: |
     Git LFS is a command line extension and specification for managing large files with Git.
