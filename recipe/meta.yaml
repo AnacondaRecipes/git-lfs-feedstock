@@ -22,7 +22,7 @@ build:
   binary_relocation: false
   detect_binary_files_with_prefix: false
   script:
-    - set -x                                                              # [unix]
+    - set -euxo pipefail                                                  # [unix]
 
     # Building for s390x - without go
     # from https://github.com/git-lfs/git-lfs/blob/main/script/install.sh
@@ -31,31 +31,38 @@ build:
 
     # Building for other subdirs
     - cd {{ pkg_src }}                                                    # [not s390x]
-    - go mod tidy                                                         # [not s390x]
-    - go generate ./commands                                              # [not (osx and arm64) and not s390x]
-    - GOARCH=amd64 go generate ./commands                                 # [osx and arm64]
-    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs                 # [build_platform != target_platform and not s390x]
-    - go build -v -ldflags "-w -s" -o $PREFIX/bin/git-lfs .               # [build_platform == target_platform and not win and not s390x]
-    - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe    # [win and not s390x]
-    - go-licenses save . --save_path={{ SRC_DIR }}/license_files || true  # [not s390x]
+    # Common flags
+    - export GOFLAGS="-buildvcs=false"                                    # [not s390x and not win]
+    # macOS
+    - export CGO_ENABLED=0 GOOS=darwin GOARCH=arm64                       # [osx and arm64]
+    # Linux
+    - export CGO_ENABLED=0 GOOS=linux  GOARCH=arm64                       # [linux and aarch64]
+    - export CGO_ENABLED=0 GOOS=linux  GOARCH=amd64                       # [linux and x86_64]
+    # Generating and unix build
+    - go generate ./commands                                              # [not s390x and not win]
+    - go build -v -ldflags "-w -s" -o "$PREFIX/bin/git-lfs" .             # [not s390x and not win]
+    # Windows
+    - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe .  # [win and not s390x]
     # Cleanup for Go builds
     - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)             # [unix and not s390x]
 
 requirements:
   build:
-    - {{ stdlib('c') }}
     - {{ compiler('go') }}  # [not s390x]
     - go-licenses
 
 test:
   commands:
-    - git-lfs --version
+    - test -x $PREFIX/bin/git-lfs                        # [unix]
+    - $PREFIX/bin/git-lfs --version                      # [unix]
+    - 'IF NOT EXIST "%PREFIX%\\Library\\bin\\git-lfs.exe" EXIT /B 1'  # [win]
+    - '"%PREFIX%\\Library\\bin\\git-lfs.exe" --version'               # [win]
 
 about:
   home: https://git-lfs.com
   license: MIT
   license_family: MIT
-  license_file: LICENSE.md
+  license_file: {{ pkg_src }}/LICENSE.md
   summary: Git extension for versioning large files
   description: |
     Git LFS is a command line extension and specification for managing large files with Git.
