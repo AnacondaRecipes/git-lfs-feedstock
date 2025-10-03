@@ -43,14 +43,14 @@ build:
     - go build -v -ldflags "-w -s" -o "$PREFIX/bin/git-lfs" .             # [not s390x and not win]
     # Windows
     - go build -v -ldflags "-w -s" -o %PREFIX%\Library\bin\git-lfs.exe .  # [win and not s390x]
-    - mkdir -p license_files && go-licenses save . --save_path=license_files || true  # [not s390x]
+    - mkdir -p license_files && go-licenses save . --save_path=license_files || true  # [not s390x and not win]
     # Cleanup for Go builds
     - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)             # [unix and not s390x]
 
 requirements:
   build:
     - {{ compiler('go') }}  # [not s390x]
-    - go-licenses
+    - go-licenses           # [not win]
 
 test:
   commands:
