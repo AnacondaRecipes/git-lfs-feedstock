@@ -1,5 +1,5 @@
 {% set name = "git-lfs" %}
-{% set version = "3.7.0" %}
+{% set version = "3.7.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
     url: https://github.com/{{ name }}/{{ name }}/archive/v{{ version }}.tar.gz
-    sha256: ab173702840627feb5f8a408dd5406fa322f3eadaa69938d9226b183d5be25a6
+    sha256: 0e83566a9e2477e03627e7fd6bf81f01fadbf93dcaf6abd2686fca90f6bac7dd
 
 build:
   number: 0
