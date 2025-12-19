@@ -33,6 +33,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('go') }}
     - go-licenses           # [not win]
 
